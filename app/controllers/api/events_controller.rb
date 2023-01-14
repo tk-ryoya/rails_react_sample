@@ -34,6 +34,10 @@ class Api::EventsController < ApplicationController
 
   private
 
+  def set_event
+    @event = Event.find(params[:id])
+  end
+
   def event_params
     params.require(:event).permit(:id,
                                   :event_type,
