@@ -1,7 +1,7 @@
 // Entry point for the build script in your package.json
 import "@hotwired/turbo-rails"
 import "./controllers"
-import React, { StricMode } from 'react';
+import React, { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './components/App';
 
@@ -10,8 +10,8 @@ const root = createRoot(container);
 
 document.addEventListener('DOMContentLoaded', () => {
   root.render(
-    <StricMode>
+    <StrictMode>
       <App />
-    </StricMode>
+    </StrictMode>
   );
 });

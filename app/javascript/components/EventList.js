@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 
 const EventList = ({ events }) => {
   const renderEvents = (eventArray) => {
-    eventArray.sort((a, b) => new Data(b.event_date) - new Data(event_date));
+    eventArray.sort((a, b) => new Date(b.event_date) - new Date(a.event_date));
 
     return eventArray.map((event) => (
-      <li key={evnet.id}>
+      <li key={event.id}>
         {event.event_date}
         {' - '}
         {event.event_type}
@@ -22,7 +22,7 @@ const EventList = ({ events }) => {
   );
 };
 
-EventList.PropTypes = {
+EventList.propTypes = {
   events: PropTypes.arrayOf(PropTypes.shape({
     id: PropTypes.number,
     event_type: PropTypes.string,
@@ -31,7 +31,7 @@ EventList.PropTypes = {
     speaker: PropTypes.string,
     host: PropTypes.string,
     published: PropTypes.bool,
-  })).isRequierd,
+  })).isRequired,
 };
 
 export default EventList;
