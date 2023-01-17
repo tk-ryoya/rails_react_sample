@@ -28,6 +28,28 @@ const Editor = () => {
     fetchData();
   }, []);
 
+  const addEvent = async (newEvent) => {
+    try {
+      const response = await window.fetch('/api/events', {
+        method: 'POST',
+        body: JSON.stringify(newEvent),
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+      });
+      if (!response.ok) throw Error(response.statusText);
+
+      const savedEvent = await response.json();
+      const newEvents = [...events, savedEvent];
+      setEvents(newEvents);
+      window.alert('Event Added!');
+      navigate(`/events/${savedEvent.id}`);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <>
       <Header />
@@ -40,7 +62,7 @@ const Editor = () => {
             <EventList events={events} />
 
             <Routes>
-              <Route path="new" element={<EventForm />} />
+              <Route path="new" element={<EventForm onSave={addEvent} />} />
               <Route path=":id" element={<Event events={events} />} />
             </Routes>
           </>

@@ -2,8 +2,26 @@ import React, { useState, useRef, useEffect } from 'react';
 import Pikaday from 'pikaday';
 import 'pikaday/css/pikaday.css';
 import { formatDate, isEmptyObject, validateEvent } from '../heplers/helpers';
+import PropTypes from 'prop-types';
 
-const EventForm = () => {
+const EventForm = ({ onSave }) => {
+  useEffect(() => {
+    const p = new Pikaday({
+      field: dateInput.current,
+      onSelect: (date) => {
+        const formattedDate = formatDate(date);
+        dateInput.current.value = formattedDate;
+        updateEvent('event_date', formattedDate);
+      },
+    });
+
+    return () => p.destroy();
+  }, []);
+
+  const updateEvent = (key, value) => {
+    setEvent((prevEvent) => ({ ...prevEvent, [key]: value }));
+  };
+
   const [event, setEvent] = useState({
     event_type: '',
     event_date: '',
@@ -49,25 +67,8 @@ const EventForm = () => {
     if (!isEmptyObject(errors)) {
       setFormErrors(errors);
     } else {
-      console.log(event);
+      onSave(event);
     }
-  };
-
-  useEffect(() => {
-    const p = new Pikaday({
-      field: dateInput.current,
-      onSelect: (date) => {
-        const formattedDate = formatDate(date);
-        dateInput.current.value = formattedDate;
-        updateEvent('event_date', formattedDate);
-      },
-    });
-
-    return () => p.destroy();
-  }, []);
-
-  const updateEvent = (key, value) => {
-    setEvent((prevEvent) => ({ ...prevEvent, [key]: value }));
   };
 
   return (
@@ -121,3 +122,7 @@ const EventForm = () => {
 };
 
 export default EventForm;
+
+EventForm.propTypes = {
+  onSave: PropTypes.func.isRequired,
+};
