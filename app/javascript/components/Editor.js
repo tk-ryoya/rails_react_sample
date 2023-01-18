@@ -38,6 +38,7 @@ const Editor = () => {
           'Content-Type': 'application/json',
         },
       });
+
       if (!response.ok) throw Error(response.statusText);
 
       const savedEvent = await response.json();
@@ -70,6 +71,31 @@ const Editor = () => {
     }
   };
 
+  const updateEvent = async (updateEvent) => {
+    try {
+      const response = await window.fetch(`/api/events/${updateEvent.id}`, {
+        method: 'PUT',
+        body: JSON.stringify(updateEvent),
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) throw Error(response.statusText);
+
+      const newEvents = events;
+      const idx = newEvents.findIndex((event) => event.id === updateEvent.id);
+      newEvents[idx] = updateEvent;
+      setEvents(newEvents);
+
+      success('Event Updated!');
+      navigate(`/events/${updateEvent.id}`);
+    } catch (error) {
+      handleAjaxError(error);
+    }
+  };
+
   return (
     <>
       <Header />
@@ -81,8 +107,9 @@ const Editor = () => {
             <EventList events={events} />
 
             <Routes>
-              <Route path="new" element={<EventForm onSave={addEvent} />} />
               <Route path=":id" element={<Event events={events} onDelete={deleteEvent} />} />
+              <Route path=":id/edit" element={<EventForm events={events} onSave={updateEvent} />} />
+              <Route path="new" element={<EventForm onSave={addEvent} />} />
             </Routes>
           </>
         )}
